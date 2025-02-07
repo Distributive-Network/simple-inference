@@ -1,0 +1,8 @@
+{
+  "name": "mnist-example",
+  "version": "0.0.1",
+  "model": "MNIST.onnx",
+  "preprocess": "preprocess.py",
+  "postprocess": "postprocess.py",
+  "packages": ["numpy", "opencv-python"]
+}

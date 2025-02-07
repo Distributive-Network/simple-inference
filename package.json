@@ -1,0 +1,15 @@
+{
+  "name": "simple-inference",
+  "version": "1.0.0",
+  "main": "dcpJob.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "dcp-client": "^4.4.23",
+    "dcp-util": "^2.3.13"
+  }
+}
