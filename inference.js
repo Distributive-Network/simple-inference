@@ -13,16 +13,16 @@ const { workFunction } = require('./workFunction');
 /**
  * Deploy work function for model inferencing via DCP
  */
-async function deploy(inputSet, modelName, computeGroup, output)
+async function deploy(inputSet, modelName, computeGroup, output, webgpu)
 {
 	const compute = require('dcp/compute');
 
-  const labels = {modelName, projectID: Date.now(), debug: false}
+  const labels = { modelName, projectID: Date.now(), debug: false, webgpu };
 	let job = compute.for(inputSet, workFunction, [labels]);
 
   job.public.name = `DCP Inferencing: ${modelName}`;
-  job.requires('dcp-ort-011123/dcp-wasm.js');
-  job.requires('dcp-ort-011123/dcp-ort.js');
+  job.requires('dcp-ort-test/dcp-wasm.js');
+  job.requires('dcp-ort-test/dcp-ort.js');
   job.requires('pyodide-core/pyodide-core.js');
   job.requires(`${modelName}/module.js`);
 
@@ -30,6 +30,7 @@ async function deploy(inputSet, modelName, computeGroup, output)
     job.computeGroups    = [computeGroup];
 	job.collateResults   = false;
 	job.workerConsole    = true;
+  job.requirements.environment = { webgpu, };
 
 	job.on('accepted', async () => {
 		console.log(`Job has dcp id: ${job.id} and has been accepted...`);
@@ -65,12 +66,15 @@ function usage()
 {
   console.log(`inference.js: Perform inferencing on upload a machine learning model via DCP.
 Usage:
-    node inference.js /path/to/model.json /path/to/input/dir [--batch=<size>] [--output=<outputFile>] [--computeGroup=<joinKey,joinSecret>] [--help]
+    node inference.js [--batch=<size>] [--output=<outputFile>]
+                      [--computeGroup=<joinKey,joinSecret>] [--webgpu] [--help]
+                      </path/to/model.json> </path/to/input/dir>
 
 Where:
     --batch         is the batch size for each slice
     --output        is the output file (json output)
     --computeGroup  is the compute group to deploy the job into
+    --webgpu        enables webgpu as the execution provider
     --help          output help menu and exit
 `);
   process.exit(1);
@@ -84,7 +88,7 @@ if (require.main === module)
     usage();
 
   var batchSize = 1;
-  var outputFile, computeGroup;
+  var outputFile, computeGroup, webgpu;
   // parse cli options
   for (let i = 4; i < process.argv.length; i++)
   {
@@ -122,6 +126,10 @@ if (require.main === module)
       const [joinKey, joinSecret] = cg.split(',');
       computeGroup = { joinKey, joinSecret };
     }
+    else if (arg.startsWith('--webgpu'))
+    {
+      webgpu = true;
+    }
   }
 
   const modelInfo = JSON.parse(fs.readFileSync(process.argv[2], { encoding: 'utf-8' }));
@@ -139,7 +147,7 @@ if (require.main === module)
   }
 
   require('dcp-client').init().then(() => {
-    deploy(inputSet, modelInfo.name, computeGroup, outputFile);
+    deploy(inputSet, modelInfo.name, computeGroup, outputFile, webgpu);
   });
 }
 

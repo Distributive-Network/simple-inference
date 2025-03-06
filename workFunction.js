@@ -46,7 +46,7 @@ async function workFunction(sliceData, labels) {
 	// add else -> comments get run
 	if (!globalThis.session) {
     globalThis.session = await ort.InferenceSession.create(model, {
-      executionProviders    : [ 'wasm' ],
+      executionProviders    : [labels['webgpu'] ? 'webgpu' : 'wasm'],
       graphOptimizationLevel: 'all'
     });
 	}
