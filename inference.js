@@ -47,7 +47,11 @@ async function deploy(inputSet, modelName, computeGroup, output, webgpu)
 	job.on('error', async function errorHandler(err) {
 		console.error(err);
 	});
-  // job.on('console', console.log)
+  job.on('console', (event) => {
+    if (event.message[0].common) {
+      console.log('ONNX Runtime Version:', event.message[0].common);
+    }
+  });
 
   let resultSet = [];
   try {

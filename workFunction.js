@@ -42,6 +42,7 @@ async function workFunction(sliceData, labels) {
 	};
 
 	ort.env.wasm.simd = true;
+  console.log(ort.env.versions);
 
 	// add else -> comments get run
 	if (!globalThis.session) {
