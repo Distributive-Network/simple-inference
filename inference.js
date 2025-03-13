@@ -21,8 +21,8 @@ async function deploy(inputSet, modelName, computeGroup, output, webgpu)
 	let job = compute.for(inputSet, workFunction, [labels]);
 
   job.public.name = `DCP Inferencing: ${modelName}`;
-  job.requires('dcp-ort-test/dcp-wasm.js');
-  job.requires('dcp-ort-test/dcp-ort.js');
+  job.requires('onnxruntime-dcp/dcp-wasm.js');
+  job.requires('onnxruntime-dcp/dcp-ort.js');
   job.requires('pyodide-core/pyodide-core.js');
   job.requires(`${modelName}/module.js`);
 
