@@ -13,18 +13,28 @@ const { workFunction } = require('./workFunction');
 /**
  * Deploy work function for model inferencing via DCP
  */
-async function deploy(inputSet, modelName, computeGroup, output, webgpu)
+async function deploy(inputSet, model, computeGroup, output, webgpu)
 {
 	const compute = require('dcp/compute');
 
-  const labels = { modelName, projectID: Date.now(), debug: false, webgpu };
-	let job = compute.for(inputSet, workFunction, [labels]);
+  const labels = { modelName: model.name, projectID: Date.now(), debug: false, webgpu };
+  const args = [labels];
+  if (model.modelDownload)
+  {
+    const url = new URL(model.modelDownload);
+    args.push(new URL(`/${model.preprocess}`, url));
+    args.push(new URL(`/${model.postprocess}`, url));
+    args.push(model.packages);
+    args.push(new URL(`/${model.model}`, url));
+  }
+	let job = compute.for(inputSet, workFunction, args);
 
-  job.public.name = `DCP Inferencing: ${modelName}`;
+  job.public.name = `DCP Inferencing: ${model.name}`;
   job.requires('onnxruntime-dcp/dcp-wasm.js');
   job.requires('onnxruntime-dcp/dcp-ort.js');
   job.requires('pyodide-core/pyodide-core.js');
-  job.requires(`${modelName}/module.js`);
+  if (!model.modelDownload)
+    job.requires(`${model.name}/module.js`);
 
   if (computeGroup)
     job.computeGroups    = [computeGroup];
@@ -151,7 +161,7 @@ if (require.main === module)
   }
 
   require('dcp-client').init().then(() => {
-    deploy(inputSet, modelInfo.name, computeGroup, outputFile, webgpu);
+    deploy(inputSet, modelInfo, computeGroup, outputFile, webgpu);
   });
 }
 

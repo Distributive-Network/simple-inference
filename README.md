@@ -13,6 +13,7 @@ Create a `model.json` file and add your model's information to it, for example
 {
   "name": "mnist-example",
   "version": "0.0.1",
+  "modelDownload": false,
   "model": "MNIST.onnx",
   "preprocess": "preprocess.py",
   "postprocess": "postprocess.py",
@@ -20,7 +21,7 @@ Create a `model.json` file and add your model's information to it, for example
 }
 ```
 
-Where `model`, `preprocess`, and `postprocess` are all the paths to the model, preprocess, and postprocess files respectively. 
+Where `model`, `preprocess`, and `postprocess` are all the paths to the model, preprocess, and postprocess files respectively. If your `model.json` has `modelDownload` set to a URL instead of false you do not need to upload your model, instead you must have a web server hosting the model that workers can fetch from. See `example-server.js` for an example server. DistributiveWorkers intended to work on these slices must have the URL added to their allowOrigins object. 
 
 Packages are all of the python libraries your pre and post processing scripts require. The list of supported packages is:
 ```

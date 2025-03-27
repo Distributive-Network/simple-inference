@@ -15,24 +15,35 @@
  * @param { object } sliceData
  * @param { object } labels
  */
-async function workFunction(sliceData, labels) {
+async function workFunction(sliceData, labels, preprocess, postprocess, pythonPackages, modelArg) {
 	progress(0);
 	require('dcp-wasm.js');
-  const moduleInput = require('module.js');
+  debugger;
+  var model, packages, preStr, postStr;
+  if (!modelArg)
+  {
+    const moduleInput = require('module.js');
+    model    = b64ToArrayBuffer(moduleInput.model);
+    packages = moduleInput.packages;
+    preStr   = atob(moduleInput.preprocess);
+    postStr  = atob(moduleInput.postprocess);
+  }
+  else
+  {
+    model    = b64ToArrayBuffer(modelArg);
+    preStr   = preprocess;
+    postStr  = postprocess;
+    packages = pythonPackages;
+
+  }
 
 	// DECLARE VARIABLES
 	let feeds       = {};
 	let finalResult = {};
 	let infResult   = {};
-	let preprocess,
-		postprocess;
 	const numInputs = Object.keys(sliceData.b64Data).length;
 
-	// DECODE ARGS AND INPUTS
-	const model    = b64ToArrayBuffer(moduleInput.model);
-	const packages = moduleInput.packages;
-	const preStr   = atob(moduleInput.preprocess);
-	const postStr  = atob(moduleInput.postprocess);
+
 
 	// CREATE ORT SESSION
 	progress(0.1);

@@ -6,8 +6,10 @@
   "main": "inference.js",
   "scripts": {},
   "dependencies": {
+    "cors": "^2.8.5",
     "dcp-client": "^4.4.23",
-    "dcp-util": "^2.3.13"
+    "dcp-util": "^2.3.13",
+    "express": "^4.21.2"
   },
   "packageManager": "npm@11.2.0"
 }

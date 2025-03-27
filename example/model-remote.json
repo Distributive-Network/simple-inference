@@ -1,7 +1,7 @@
 {
   "name": "mnist-example",
   "version": "0.0.1",
-  "modelDownload": false,
+  "modelDownload": "http://localhost:3500",
   "model": "MNIST.onnx",
   "preprocess": "preprocess.py",
   "postprocess": "postprocess.py",
