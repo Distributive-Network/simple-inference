@@ -70,9 +70,9 @@ function usage()
 {
   console.log(`inference.js: Perform inferencing on upload a machine learning model via DCP.
 Usage:
-    node inference.js [--batch=<size>] [--output=<outputFile>]
+    node inference.js </path/to/model.json> </path/to/input/dir>
+                      [--batch=<size>] [--output=<outputFile>]
                       [--computeGroup=<joinKey,joinSecret>] [--webgpu] [--help]
-                      </path/to/model.json> </path/to/input/dir>
 
 Where:
     --batch         is the batch size for each slice
