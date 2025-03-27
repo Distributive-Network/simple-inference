@@ -18,7 +18,6 @@
 async function workFunction(sliceData, labels, preprocess, postprocess, pythonPackages, modelArg) {
 	progress(0);
 	require('dcp-wasm.js');
-  debugger;
   var model, packages, preStr, postStr;
   if (!modelArg)
   {
@@ -34,7 +33,6 @@ async function workFunction(sliceData, labels, preprocess, postprocess, pythonPa
     preStr   = preprocess;
     postStr  = postprocess;
     packages = pythonPackages;
-
   }
 
 	// DECLARE VARIABLES
@@ -42,8 +40,6 @@ async function workFunction(sliceData, labels, preprocess, postprocess, pythonPa
 	let finalResult = {};
 	let infResult   = {};
 	const numInputs = Object.keys(sliceData.b64Data).length;
-
-
 
 	// CREATE ORT SESSION
 	progress(0.1);
